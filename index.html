@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffb800">
+<title>Crush Matching · Ganesh Mahotsav</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💘</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#2a1458; --paper:#fff3d6; --marigold:#ffb800; --saffron:#ff7a1a;
+  --pink:#ff4f8b;--purple:#7b4dff; --mint:#35d0ba; --white:#fff; --err:#d6193f;
+  --display:'Lilita One','Trebuchet MS',Impact,sans-serif;
+  --body:'Baloo 2','Trebuchet MS',Verdana,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%;overflow-x:hidden}
+a,button,label,input,textarea{-webkit-tap-highlight-color:transparent}
+body{
+  font-family:var(--body);font-weight:500;color:var(--ink);
+  background-color:var(--paper);
+  background-image:radial-gradient(var(--marigold) 2.5px,transparent 3px);
+  background-size:34px 34px;
+  min-height:100vh;min-height:100dvh;overflow-x:hidden;position:relative;
+}
+/* floating decorations */
+.float{position:fixed;font-size:2.2rem;z-index:0;pointer-events:none;animation:bob 6s ease-in-out infinite;opacity:.9}
+.f1{top:6%;left:5%}.f2{top:14%;right:6%;animation-delay:-2s}.f3{top:52%;left:2%;animation-delay:-4s}
+.f4{bottom:8%;right:4%;animation-delay:-1s}.f5{bottom:16%;left:8%;animation-delay:-3s}.f6{top:40%;right:2%;animation-delay:-5s}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-16px) rotate(8deg)}}
+
+main{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:28px 18px 60px;
+  padding-left:max(18px,env(safe-area-inset-left));padding-right:max(18px,env(safe-area-inset-right));
+  padding-bottom:max(60px,calc(env(safe-area-inset-bottom) + 40px))}
+
+/* hero */
+.hero{text-align:center;margin-bottom:26px}
+.blessing{
+  display:inline-block;background:var(--saffron);color:var(--white);
+  font-family:var(--display);font-size:1.05rem;letter-spacing:.5px;
+  border:3px solid var(--ink);border-radius:999px;padding:6px 18px;
+  box-shadow:4px 4px 0 var(--ink);transform:rotate(-2deg);margin-bottom:18px;
+}
+h1{
+  font-family:var(--display);font-weight:400;line-height:.95;
+  font-size:clamp(3.2rem,15vw,5.6rem);color:var(--pink);
+  -webkit-text-stroke:3px var(--ink);paint-order:stroke fill;
+  text-shadow:5px 5px 0 var(--ink);
+}
+h1 .l2{color:var(--marigold);display:block;transform:rotate(-2deg)}
+.heart{
+  display:inline-block;font-size:.8em;animation:beat 1.1s ease-in-out infinite;
+  -webkit-text-stroke:0;text-shadow:none;vertical-align:middle;
+}
+@keyframes beat{0%,100%{transform:scale(1)}20%{transform:scale(1.25)}40%{transform:scale(1)}60%{transform:scale(1.18)}}
+.sub{font-size:1.15rem;font-weight:700;margin-top:16px}
+.sub small{display:block;font-weight:500;font-size:1rem;opacity:.8}
+
+/* cards */
+.card{
+  background:var(--white);border:4px solid var(--ink);border-radius:28px;
+  box-shadow:9px 9px 0 var(--ink);padding:24px 22px;
+}
+.rules{
+  background:var(--mint);margin-bottom:22px;transform:rotate(1deg);
+  padding:16px 20px;font-weight:700;
+}
+.rules p+p{margin-top:6px;font-weight:500}
+
+.privacy{background:#e4dbff;margin-bottom:22px;transform:rotate(-.8deg);padding:16px 20px}
+.privacy strong{font-family:var(--display);font-weight:400;font-size:1.15rem;display:block;margin-bottom:4px}
+.privacy p{font-weight:600;line-height:1.4}
+.field{margin-bottom:22px}
+label.q,.q{
+  display:block;font-family:var(--display);font-size:1.2rem;margin-bottom:8px;
+}
+.q .req{color:var(--pink)}
+.hint{font-size:.9rem;opacity:.75;margin:-4px 0 8px}
+input[type=text],textarea{
+  width:100%;font:inherit;font-weight:700;color:var(--ink);
+  background:var(--paper);border:3px solid var(--ink);border-radius:16px;
+  padding:12px 16px;min-height:52px;font-size:16px;outline:none;transition:box-shadow .15s,transform .15s;
+  -webkit-appearance:none;appearance:none;
+}
+textarea{min-height:120px;resize:vertical;line-height:1.4}
+input::placeholder,textarea::placeholder{color:#8a7aa8;font-weight:500}
+input[type=text]:focus,textarea:focus{box-shadow:5px 5px 0 var(--pink);transform:translate(-2px,-2px)}
+.count{text-align:right;font-size:.85rem;opacity:.7;margin-top:4px}
+
+/* radio stickers */
+.chips{display:grid;gap:12px}
+.chip input{position:absolute;opacity:0;pointer-events:none}
+.chip span{
+  display:flex;align-items:center;gap:12px;cursor:pointer;min-height:58px;
+  font-family:var(--display);font-size:1.15rem;
+  background:var(--paper);border:3px solid var(--ink);border-radius:18px;
+  padding:12px 16px;box-shadow:4px 4px 0 var(--ink);
+  transition:transform .12s,box-shadow .12s,background .12s;
+}
+.chip span::before{content:attr(data-e);font-size:1.6rem}
+.chip span::after{
+  content:"";margin-left:auto;width:26px;height:26px;border-radius:50%;
+  border:3px solid var(--ink);background:var(--white);flex:none;
+}
+.chip:hover span{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+.chip input:checked+span{background:var(--marigold);transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+.chip input:checked+span::after{background:var(--pink);content:"✓";color:#fff;display:grid;place-items:center;font-size:.95rem;line-height:1}
+.chip input:focus-visible+span{outline:4px solid var(--pink);outline-offset:3px}
+
+/* consent */
+.consent{
+  display:flex;gap:12px;align-items:flex-start;cursor:pointer;
+  background:#fff0a8;border:3px dashed var(--ink);border-radius:18px;padding:14px 16px;
+  font-weight:700;line-height:1.35;
+}
+.consent input{position:absolute;opacity:0}
+.box{
+  flex:none;width:30px;height:30px;border:3px solid var(--ink);border-radius:9px;background:var(--white);
+  display:grid;place-items:center;font-size:1.1rem;color:transparent;transition:.12s;
+}
+.consent input:checked~.box{background:var(--mint);color:var(--ink)}
+.consent input:focus-visible~.box{outline:4px solid var(--pink);outline-offset:3px}
+
+/* errors */
+.err{display:none;color:var(--err);font-weight:800;font-size:.95rem;margin-top:6px}
+.field.bad .err{display:block}
+.field.bad input[type=text],.field.bad textarea,.field.bad .consent{border-color:var(--err)}
+.field.bad{animation:shake .4s}
+@keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+
+/* button */
+.go{
+  width:100%;font-family:var(--display);font-size:1.6rem;color:var(--white);cursor:pointer;min-height:60px;touch-action:manipulation;
+  background:var(--pink);border:4px solid var(--ink);border-radius:22px;padding:14px;
+  box-shadow:6px 6px 0 var(--ink);transition:transform .1s,box-shadow .1s;margin-top:6px;
+  -webkit-text-stroke:1px var(--ink);paint-order:stroke fill;
+}
+.go:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 var(--ink)}
+.go:active{transform:translate(5px,5px);box-shadow:1px 1px 0 var(--ink)}
+.go:focus-visible{outline:4px solid var(--marigold);outline-offset:4px}
+.go[disabled]{background:#b9a6d9;cursor:wait;transform:translate(4px,4px);box-shadow:2px 2px 0 var(--ink)}
+.toast{display:none;margin-top:14px;background:var(--err);color:#fff;border:3px solid var(--ink);
+  border-radius:14px;padding:10px 14px;font-weight:700;text-align:center}
+.toast.show{display:block}
+
+/* success */
+#done{display:none;text-align:center}
+#done.show{display:block;animation:pop .6s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pop{0%{transform:scale(.5) rotate(-6deg);opacity:0}100%{transform:scale(1) rotate(0);opacity:1}}
+#done .big{font-size:5rem;line-height:1;animation:beat 1.1s infinite}
+#done h2{font-family:var(--display);font-weight:400;font-size:2.4rem;color:var(--pink);
+  -webkit-text-stroke:2px var(--ink);paint-order:stroke fill;text-shadow:4px 4px 0 var(--ink);margin:12px 0}
+#done .stage{
+  background:var(--marigold);border:3px solid var(--ink);border-radius:20px;
+  padding:16px;font-weight:800;font-size:1.2rem;line-height:1.35;margin:16px 0;
+  box-shadow:5px 5px 0 var(--ink);transform:rotate(-1.5deg);
+}
+#done p{font-weight:500}
+.again{
+  margin-top:18px;font-family:var(--display);font-size:1.1rem;cursor:pointer;
+  background:var(--mint);color:var(--ink);border:3px solid var(--ink);border-radius:16px;padding:10px 20px;
+  box-shadow:4px 4px 0 var(--ink)
+}
+.again:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+footer{text-align:center;margin-top:26px;font-weight:700}
+
+/* confetti */
+.conf{position:fixed;top:-20px;width:12px;height:16px;z-index:5;border:2px solid var(--ink);border-radius:3px;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+
+/* two panels: you / your crush */
+.card.panel{padding:0;overflow:hidden}
+.panel .ph{display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:4px solid var(--ink)}
+.panel .ph b{font-family:var(--display);font-weight:400;font-size:1.35rem;display:block;line-height:1.1}
+.panel .ph small{font-weight:700;font-size:.9rem;display:block;margin-top:2px}
+.panel .pe{font-size:2.2rem;line-height:1}
+.panel .pb{padding:20px 22px 2px}
+.panel.me .ph{background:var(--mint)}
+.panel.cr{background:#ffe3ee}
+.panel.cr .ph{background:var(--pink)}
+.arrow{text-align:center;font-family:var(--display);font-size:1.15rem;margin:18px 0}
+.send{margin-top:24px}
+/* countdown + closed */
+.timer{margin-bottom:22px;text-align:center;background:var(--marigold);transform:rotate(-1deg);padding:16px 18px}
+.timer .tl{font-family:var(--display);font-size:1.2rem;margin-bottom:12px}
+.tgrid{display:flex;justify-content:center;gap:10px}
+.tb{background:var(--white);border:3px solid var(--ink);border-radius:16px;min-width:76px;padding:8px 6px 6px;box-shadow:4px 4px 0 var(--ink)}
+.tb b{display:block;font-family:var(--display);font-weight:400;font-size:2.3rem;line-height:1;font-variant-numeric:tabular-nums}
+.tb small{font-weight:700;font-size:.8rem}
+.timer.hot{background:var(--pink)}
+.timer.hot .tb b{animation:beat 1s ease-in-out infinite}
+#closed{display:none;text-align:center;background:#ffd6e4;margin-bottom:22px}
+#closed.show{display:block;animation:pop .6s cubic-bezier(.2,1.6,.4,1)}
+#closed .big{font-size:4.5rem;line-height:1}
+#closed h2{font-family:var(--display);font-weight:400;font-size:2.2rem;color:var(--pink);
+  -webkit-text-stroke:2px var(--ink);paint-order:stroke fill;text-shadow:4px 4px 0 var(--ink);margin:10px 0}
+#closed p{font-weight:700;line-height:1.4}
+/* match pairs + dialog */
+.pair{width:100%;cursor:pointer;color:var(--ink);text-align:center;display:block}
+.pair small{display:block;font-family:var(--body);font-weight:700;font-size:.85rem;margin-top:2px}
+.ov{position:fixed;inset:0;background:rgba(42,20,88,.65);display:none;align-items:center;justify-content:center;padding:16px;z-index:20}
+.ov.show{display:flex}
+.dlg{background:var(--white);border:4px solid var(--ink);border-radius:26px;box-shadow:8px 8px 0 var(--ink);
+  width:100%;max-width:440px;max-height:90vh;max-height:90dvh;overflow:auto;padding:20px;text-align:center;
+  animation:pop .4s cubic-bezier(.2,1.6,.4,1)}
+.dlg h4{font-family:var(--display);font-weight:400;font-size:1.7rem;color:var(--pink);-webkit-text-stroke:1.5px var(--ink);
+  paint-order:stroke fill;text-shadow:3px 3px 0 var(--ink);margin-bottom:8px}
+.pp{border:3px solid var(--ink);border-radius:16px;padding:12px 14px;text-align:left;margin-top:10px}
+.pp.a{background:#d9f7f1}.pp.b{background:#ffe3ee}
+.pp small{font-weight:700;font-size:.8rem;display:block;opacity:.8}
+.pp b{font-family:var(--display);font-weight:400;font-size:1.35rem;display:block;line-height:1.15;word-break:break-word}
+.pp span{font-weight:700;word-break:break-word}
+.mid{font-size:1.6rem;margin-top:6px;line-height:1}
+.dlg .note{margin-top:12px;background:#fff0a8;border:3px dashed var(--ink);border-radius:14px;padding:10px 12px;font-weight:700;text-align:left;word-break:break-word}
+/* reveal matches */
+.reveal{margin-top:34px;text-align:center;background:#d9f7f1}
+.reveal .lock{font-size:3rem;line-height:1}
+.reveal h3{font-family:var(--display);font-weight:400;font-size:1.6rem;margin:6px 0 4px}
+.reveal .rp{font-weight:700;line-height:1.4;margin-bottom:14px}
+.go.alt{background:var(--purple);font-size:1.3rem;margin-top:0}
+.reveal.shake{animation:shake .4s}
+#matchOut{margin-top:6px}
+.mname{
+  background:var(--marigold);border:3px solid var(--ink);border-radius:16px;
+  padding:10px 14px;margin-top:12px;font-family:var(--display);font-size:1.25rem;
+  box-shadow:4px 4px 0 var(--ink);word-break:break-word;
+  animation:pop .5s cubic-bezier(.2,1.6,.4,1) backwards;
+}
+@media (hover:none){
+  .chip:hover input:not(:checked)+span{transform:none;box-shadow:4px 4px 0 var(--ink)}
+  .go:hover{transform:none;box-shadow:6px 6px 0 var(--ink)}
+}
+@media (max-width:480px){
+  main{padding-top:20px}
+  .card{padding:20px 16px;border-width:3px;border-radius:22px;box-shadow:6px 6px 0 var(--ink)}
+  .rules,.privacy{padding:14px 16px}
+  .hero{margin-bottom:20px}
+  .blessing{font-size:.95rem;padding:5px 14px}
+  h1{-webkit-text-stroke:2px var(--ink);text-shadow:3px 3px 0 var(--ink)}
+  .sub{font-size:1.05rem}
+  .float{font-size:1.5rem;opacity:.55}
+  .f3,.f5,.f6{display:none}
+  .q,label.q{font-size:1.1rem}
+  .chip span{font-size:1.05rem;padding:10px 14px}
+  .consent{padding:12px 14px;font-size:.95rem}
+  .go{font-size:1.4rem;border-width:3px;border-radius:18px}
+  .go.alt{font-size:1.15rem}
+  .timer{padding:14px 12px}
+  .tgrid{gap:8px}
+  .tb{min-width:0;flex:1;max-width:84px}
+  .tb b{font-size:1.9rem}
+  #closed h2{font-size:1.8rem}
+  .panel .ph{padding:12px 14px}
+  .panel .pb{padding:16px 16px 0}
+  .panel .ph b{font-size:1.2rem}
+  .dlg{padding:16px}
+  .mname{font-size:1.1rem}
+  #done .big{font-size:4rem}
+  #done h2{font-size:2rem}
+  #done .stage{font-size:1.1rem}
+  .again{width:100%;min-height:52px}
+}
+@media (max-width:340px){
+  .chip span::before{font-size:1.3rem}
+  .chip span{gap:8px;font-size:1rem}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+
+<span class="float f1">🪔</span><span class="float f2">🌼</span><span class="float f3">💘</span>
+<span class="float f4">🪔</span><span class="float f5">🌼</span><span class="float f6">✨</span>
+
+<main>
+  <header class="hero">
+    <div class="blessing">🙏 Ganpati Bappa Morya!</div>
+    <h1>Crush <span class="l2">Match <span class="heart">💘</span></span></h1>
+    <p class="sub">Ganesh Mahotsav Cultural Night
+      <small id="heroSub">Tell us who you like. Match? Centre stage tonight!</small></p>
+  </header>
+
+  <section class="card timer" id="timer" aria-live="off">
+    <div class="tl" id="tl">⏳ Entries close tonight at 8:15 PM</div>
+    <div class="tgrid">
+      <div class="tb" id="tbD" style="display:none"><b id="tD">00</b><small>days</small></div>
+      <div class="tb"><b id="tH">--</b><small>hours</small></div>
+      <div class="tb"><b id="tM">--</b><small>minutes</small></div>
+      <div class="tb"><b id="tS">--</b><small>seconds</small></div>
+    </div>
+  </section>
+
+  <section class="card" id="closed" aria-live="polite">
+    <div class="big">⏰</div>
+    <h2>Entries closed!</h2>
+    <p>Time's up, no more entries. If you matched, listen for your name on stage tonight! 🎤💘</p>
+  </section>
+
+  <section id="formWrap">
+    <div class="card rules">
+      <p>🎤 How it works</p>
+      <p>Fill in your details and your crush's. If your crush fills yours too, you both get called on stage tonight. No match, no announcement.</p>
+    </div>
+
+    <div class="card privacy">
+      <strong>🔒 Who sees your entry?</strong>
+      <p>Your entry will be sent only to the backend server, where the matching will happen automatically. It will not be visible to the audience or other participants. Only mutual matches will be announced on stage tonight and displayed in the Match Box at the bottom of this page.</p>
+    </div>
+
+    <form id="crushForm" novalidate>
+      <div class="card panel me">
+        <div class="ph"><span class="pe">🙋</span><div><b>Step 1: About you</b><small>The person filling this form. That's you!</small></div></div>
+        <div class="pb">
+          <div class="field" data-f="name">
+            <label class="q" for="name">Your name <span class="req">*</span></label>
+            <p class="hint">Use your real name so we can find you.</p>
+            <input type="text" id="name" autocomplete="off" autocapitalize="words" enterkeyhint="next" maxlength="80" placeholder="e.g. Rohan Sharma">
+            <div class="err">Please enter your name.</div>
+          </div>
+          <div class="field" data-f="bg">
+            <label class="q" for="bg">Your background <span class="req">*</span></label>
+            <p class="hint">MTech 1st year, Scientist, etc.</p>
+            <input type="text" id="bg" autocomplete="off" autocapitalize="words" enterkeyhint="next" maxlength="80" placeholder="e.g. MTech 1st year">
+            <div class="err">Tell us your background.</div>
+          </div>
+          <div class="field" data-f="branch">
+            <label class="q" for="branch">Your branch</label>
+            <p class="hint">Only if you are from DIAT. Otherwise leave it empty.</p>
+            <input type="text" id="branch" autocomplete="off" autocapitalize="words" enterkeyhint="next" maxlength="80" placeholder="e.g. Computer Science">
+          </div>
+        </div>
+      </div>
+
+      <div class="arrow" aria-hidden="true">💘 Now the person you like 👇</div>
+
+      <div class="card panel cr">
+        <div class="ph"><span class="pe">😍</span><div><b>Step 2: About your crush</b><small>Their details, not yours!</small></div></div>
+        <div class="pb">
+          <div class="field" data-f="crush">
+            <label class="q" for="crush">Your crush's name <span class="req">*</span></label>
+            <p class="hint">The exact name, so the match works.</p>
+            <input type="text" id="crush" autocomplete="off" autocapitalize="words" enterkeyhint="next" maxlength="80" placeholder="e.g. Priya Verma">
+            <div class="err">Enter your crush's exact name.</div>
+          </div>
+          <div class="field" data-f="grp">
+            <span class="q">Your crush belongs to <span class="req">*</span></span>
+            <div class="chips" role="radiogroup" aria-label="Your crush belongs to">
+              <label class="chip"><input type="radio" name="grp" value="DRDO SCIENTIST"><span data-e="🔬">DRDO Scientist</span></label>
+              <label class="chip"><input type="radio" name="grp" value="DIAT PHD"><span data-e="🎓">DIAT PhD</span></label>
+              <label class="chip"><input type="radio" name="grp" value="DIAT MTECH"><span data-e="📚">DIAT MTech</span></label>
+            </div>
+            <div class="err">Pick where your crush belongs.</div>
+          </div>
+          <div class="field" data-f="desc">
+            <label class="q" for="desc">Describe your crush <span class="req">*</span></label>
+            <p class="hint">A few clues help us find the right person. Add their branch if they are from DIAT.</p>
+            <textarea id="desc" enterkeyhint="done" maxlength="500" placeholder="Department, year, what they look like, how you know them..."></textarea>
+            <div class="count"><span id="cnt">0</span>/500</div>
+            <div class="err">Add a short description of your crush.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="send">
+        <div class="field" data-f="consent">
+          <label class="consent">
+            <input type="checkbox" id="consent">
+            <span class="box">✓</span>
+            <span>I agree: if my crush picks me too, I'll be called on stage tonight! :)</span>
+          </label>
+          <div class="err">Tick the box to say you're okay with being called on stage.</div>
+        </div>
+        <button type="submit" class="go" id="go">Send my crush 💌</button>
+        <div class="toast" id="toast">Could not send. Check your internet and press the button again.</div>
+      </div>
+    </form>
+  </section>
+
+  <section id="done" class="card" aria-live="polite">
+    <div class="big">💘</div>
+    <h2>You're in!</h2>
+    <div class="stage">If it's a match, you'll be called on stage tonight! :) 🎤✨</div>
+    <p>Stay close to the stage and keep your fingers crossed.<br>Ganpati Bappa Morya! 🪔</p>
+    <button class="again" id="again" type="button">Fill another entry</button>
+  </section>
+
+  <section class="card reveal" id="reveal">
+    <div class="lock" id="lockIcon">🔒</div>
+    <h3>Matched crushes</h3>
+    <p class="rp" id="rp">Locked for now. It opens when the host says it's time!</p>
+    <button type="button" class="go alt" id="seeMatches">See matched crushes 💞</button>
+    <div id="matchOut" aria-live="polite"></div>
+  </section>
+
+  <footer>Made with 💛 for DRDO-DIAT Ganesh Mahotsav</footer>
+</main>
+
+<div class="ov" id="ov" role="dialog" aria-modal="true" aria-labelledby="dlgTitle">
+  <div class="dlg" id="dlg"></div>
+</div>
+
+<script>
+(function(){
+  var FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSczOIyCNuXErXvgwE61RBmEzvHT5lYAeB9XsiLwf04wUrokUQ/formResponse";
+  var ENTRY = {
+    name:  "entry.1240199489",
+    bg:    "entry.1898372337",
+    crush: "entry.607827241",
+    grp:   "entry.208232839",
+    desc:  "entry.1291609669",
+    branch:"entry.76807714"
+  };
+
+  var $ = function(id){return document.getElementById(id)};
+  var form = $("crushForm"), go = $("go"), toast = $("toast");
+  var desc = $("desc");
+
+  desc.addEventListener("input", function(){ $("cnt").textContent = desc.value.length; });
+
+  function setBad(key, bad){
+    var el = form.querySelector('[data-f="'+key+'"]');
+    el.classList.remove("bad");
+    if(bad){ void el.offsetWidth; el.classList.add("bad"); }
+  }
+  form.addEventListener("input", function(e){
+    var f = e.target.closest(".field"); if(f) f.classList.remove("bad");
+  });
+  form.addEventListener("change", function(e){
+    var f = e.target.closest(".field"); if(f) f.classList.remove("bad");
+  });
+
+  function confetti(){
+    var colors = ["#ff4f8b","#ffb800","#35d0ba","#ff7a1a","#7b4dff","#ffffff"];
+    for(var i=0;i<70;i++){
+      var c = document.createElement("i");
+      c.className = "conf";
+      c.style.left = Math.random()*100+"vw";
+      c.style.background = colors[i%colors.length];
+      c.style.animationDuration = (2.5+Math.random()*2.5)+"s";
+      c.style.animationDelay = (Math.random()*.8)+"s";
+      c.style.transform = "rotate("+Math.random()*360+"deg)";
+      document.body.appendChild(c);
+      setTimeout(function(el){return function(){el.remove()}}(c), 6500);
+    }
+  }
+
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    toast.classList.remove("show");
+    if(resultsMode || now() >= DEADLINE){ closeForm(); return; }
+
+    var v = {
+      name:  $("name").value.trim(),
+      bg:    $("bg").value.trim(),
+      branch:$("branch").value.trim(),
+      crush: $("crush").value.trim(),
+      desc:  desc.value.trim(),
+      grp:   (form.querySelector('input[name="grp"]:checked')||{}).value || "",
+      consent: $("consent").checked
+    };
+
+    var bad = ["name","bg","crush","grp","desc","consent"].filter(function(k){ return !v[k]; });
+    ["name","bg","crush","grp","desc","consent"].forEach(function(k){ setBad(k, bad.indexOf(k)>-1); });
+    if(bad.length){
+      form.querySelector('[data-f="'+bad[0]+'"]').scrollIntoView({behavior:"smooth",block:"center"});
+      return;
+    }
+
+    var body = new URLSearchParams();
+    body.append(ENTRY.name, v.name);
+    body.append(ENTRY.bg, v.bg);
+    body.append(ENTRY.branch, v.branch || "N/A");
+    body.append(ENTRY.crush, v.crush);
+    body.append(ENTRY.grp, v.grp);
+    body.append(ENTRY.grp + "_sentinel", "");
+    body.append(ENTRY.desc, v.desc);
+    body.append("fvv", "1");
+    body.append("pageHistory", "0");
+
+    go.disabled = true;
+    go.textContent = "Sending love... 💞";
+
+    fetch(FORM_URL, { method:"POST", mode:"no-cors", body:body })
+      .then(function(){
+        $("formWrap").style.display = "none";
+        $("done").classList.add("show");
+        window.scrollTo({top:0,behavior:"smooth"});
+        confetti();
+      })
+      .catch(function(){
+        toast.classList.add("show");
+      })
+      .finally(function(){
+        go.disabled = false;
+        go.textContent = "Send my crush 💌";
+      });
+  });
+
+  /* ---- countdown: change DEADLINE to move the closing time ----
+     Fixed to 19 Sep 2026, 8:15 PM India time (+05:30), same for every phone. */
+  var DEADLINE = new Date("2026-09-19T20:15:00+05:30").getTime();
+  var skew = 0, closed = false, started = false;
+  var timerEl = $("timer"), closedCard = $("closed");
+  function now(){ return Date.now() + skew; }
+  function pad(n){ return n < 10 ? "0" + n : "" + n; }
+  var resultsMode = false, lastKey = "", revealed = false;
+  function closeForm(){
+    if(closed) return;
+    closed = true;
+    $("formWrap").style.display = "none";
+    timerEl.style.display = "none";
+    if(!resultsMode && !$("done").classList.contains("show")) closedCard.classList.add("show");
+  }
+  /* match.txt is unlocked (empty or names): hide every form, show only the match box */
+  function enterResultsMode(){
+    if(resultsMode) return;
+    resultsMode = true; closed = true;
+    $("formWrap").style.display = "none";
+    timerEl.style.display = "none";
+    $("done").classList.remove("show");
+    closedCard.classList.remove("show");
+    $("heroSub").textContent = "Results are ready! Tap the button below 💘";
+  }
+  function tick(){
+    var ms = DEADLINE - now();
+    if(ms <= 0){ closeForm(); return; }
+    var t = Math.floor(ms / 1000);
+    var d = Math.floor(t / 86400), h = Math.floor(t % 86400 / 3600), m = Math.floor(t % 3600 / 60), sec = t % 60;
+    $("tbD").style.display = d > 0 ? "" : "none";
+    $("tD").textContent = pad(d);
+    $("tH").textContent = pad(h);
+    $("tM").textContent = pad(m);
+    $("tS").textContent = pad(sec);
+    var hot = ms < 10 * 60 * 1000;
+    timerEl.classList.toggle("hot", hot);
+    $("tl").textContent = hot ? "🏃 Hurry! Entries close very soon" : "⏳ Entries close tonight at 8:15 PM";
+  }
+  function start(){ if(started) return; started = true; tick(); setInterval(tick, 1000); }
+  /* use the web server's clock so a wrong phone clock can't reopen or close the form early */
+  setTimeout(start, 2500);
+  fetch(location.href.split("#")[0], { method: "HEAD", cache: "no-store" })
+    .then(function(r){
+      var d = Date.parse(r.headers.get("Date") || "");
+      if(!isNaN(d)) skew = d - Date.now();
+    })
+    .catch(function(){})
+    .then(start);
+
+  /* ---- match reveal: reads match.txt ----
+     "-e-"  -> locked (form stays open until the deadline)
+     empty  -> unlocked, no matches (form disappears)
+     names  -> one match per line (form disappears) */
+  var seeBtn = $("seeMatches"), out = $("matchOut"), rp = $("rp"), lockIcon = $("lockIcon"), reveal = $("reveal");
+  function show(icon, msg){ lockIcon.textContent = icon; rp.textContent = msg; out.innerHTML = ""; }
+
+  function fetchMatch(){
+    return fetch("match.txt?t=" + Date.now(), { cache: "no-store" })
+      .then(function(r){
+        var ct = r.headers.get("content-type") || "";
+        if(!r.ok || ct.indexOf("text/html") > -1) throw new Error("bad");
+        return r.text();
+      })
+      .then(function(t){
+        t = t.replace(/^\uFEFF/, "").trim();
+        if(t.toLowerCase() === "-e-") return { type: "locked" };
+        if(t === "") return { type: "none" };
+        return { type: "names", names: t.split(/\r?\n/).map(function(l){ return l.trim(); }).filter(Boolean) };
+      });
+  }
+
+  /* match.txt line:  Name1 | Name2 | Background1 | Background2 | optional note */
+  function parseLine(line){
+    var f = line.split(/[|\t;]/.test(line) ? /\s*[|\t;]\s*/ : /\s*,\s*/).map(function(x){ return x.trim(); });
+    if(f.length < 2 || !f[0] || !f[1]) return { plain: line };
+    return { n1: f[0], n2: f[1], b1: f[2] || "", b2: f[3] || "", note: f.slice(4).join(" | ") };
+  }
+  function el(tag, cls, text){
+    var e = document.createElement(tag);
+    if(cls) e.className = cls;
+    if(text !== undefined) e.textContent = text;
+    return e;
+  }
+
+  var ov = $("ov"), dlg = $("dlg"), lastFocus = null;
+  function person(cls, label, name, bg){
+    var d = el("div", "pp " + cls);
+    d.appendChild(el("small", "", label));
+    d.appendChild(el("b", "", name));
+    d.appendChild(el("span", "", bg ? "🎓 " + bg : "Background not given"));
+    return d;
+  }
+  function openPair(p){
+    dlg.innerHTML = "";
+    var h = el("h4", "", "It's a match! 💘"); h.id = "dlgTitle";
+    dlg.appendChild(h);
+    dlg.appendChild(person("a", "Person 1", p.n1, p.b1));
+    dlg.appendChild(el("div", "mid", "💘"));
+    dlg.appendChild(person("b", "Person 2", p.n2, p.b2));
+    if(p.note) dlg.appendChild(el("div", "note", "📝 " + p.note));
+    var c = el("button", "again", "Close"); c.type = "button"; c.id = "dlgClose";
+    c.addEventListener("click", closePair);
+    dlg.appendChild(c);
+    lastFocus = document.activeElement;
+    ov.classList.add("show");
+    document.body.style.overflow = "hidden";
+    c.focus();
+  }
+  function closePair(){
+    ov.classList.remove("show");
+    document.body.style.overflow = "";
+    if(lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+  ov.addEventListener("click", function(e){ if(e.target === ov) closePair(); });
+  document.addEventListener("keydown", function(e){ if(e.key === "Escape" && ov.classList.contains("show")) closePair(); });
+
+  function showReady(){ show("🔓", "Matches are ready! Tap the button below to see who matched 💘"); }
+
+  function renderMatch(st){
+    reveal.classList.remove("shake");
+    if(st.type === "locked"){
+      show("🔒", "Still locked! Matches will be revealed on stage tonight. Try again later 🤞");
+      void reveal.offsetWidth; reveal.classList.add("shake");
+    } else if(st.type === "none"){
+      show("🔓", "Unlocked, but no crush matches this time. Unfortunate luck! 😢 Better luck next Ganesh Mahotsav 🪔");
+    } else {
+      show("🎉", "It's a match! Tap a pair to see their details 💘");
+      st.names.forEach(function(line, i){
+        var p = parseLine(line), d;
+        if(p.plain){
+          d = el("div", "mname", "💘 " + p.plain);
+        } else {
+          d = el("button", "mname pair", "💘 " + p.n1 + " ❤ " + p.n2);
+          d.type = "button";
+          d.appendChild(el("small", "", "tap for details 👆"));
+          d.addEventListener("click", function(){ openPair(p); });
+        }
+        d.style.animationDelay = (i * 0.15) + "s";
+        out.appendChild(d);
+      });
+    }
+  }
+
+  /* unlocked: forms vanish, but names stay hidden until the button is tapped */
+  function applyUnlocked(st){
+    var first = !resultsMode;
+    enterResultsMode();
+    if(!revealed){ if(first) showReady(); return; }
+    var key = JSON.stringify(st);
+    if(key !== lastKey){ lastKey = key; renderMatch(st); }
+  }
+
+  seeBtn.addEventListener("click", function(){
+    seeBtn.disabled = true;
+    seeBtn.textContent = "Checking... 🔎";
+    fetchMatch()
+      .then(function(st){
+        if(st.type === "locked"){ renderMatch(st); return; }
+        enterResultsMode();
+        revealed = true;
+        lastKey = JSON.stringify(st);
+        renderMatch(st);
+        if(st.type === "names") confetti();
+      })
+      .catch(function(e){
+        var msg;
+        if(location.protocol === "file:") msg = "Open this page through a web server (like VS Code Live Server), not by double-clicking the file.";
+        else if(e && e.message === "bad") msg = "match.txt was not found. Put it in the same folder as this page and check the name is exactly match.txt.";
+        else msg = "Couldn't check right now. Check your internet and try again.";
+        show("⚠️", msg);
+      })
+      .finally(function(){
+        seeBtn.disabled = false;
+        seeBtn.textContent = "See matched crushes 💞";
+      });
+  });
+
+  /* watch match.txt in the background: the moment it is unlocked, forms vanish */
+  function poll(){
+    fetchMatch().then(function(st){ if(st.type !== "locked") applyUnlocked(st); }).catch(function(){});
+  }
+  poll();
+  setInterval(poll, 15000);
+
+  $("again").addEventListener("click", function(){
+    if(resultsMode) return;
+    if(now() >= DEADLINE){ $("done").classList.remove("show"); closeForm(); closedCard.classList.add("show"); return; }
+    form.reset(); $("cnt").textContent = "0";
+    $("done").classList.remove("show");
+    $("formWrap").style.display = "";
+    window.scrollTo({top:0,behavior:"smooth"});
+  });
+})();
+</script>
+</body>
+</html>
